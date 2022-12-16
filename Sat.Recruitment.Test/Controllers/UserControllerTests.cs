@@ -65,7 +65,7 @@ namespace Sat.Recruitment.Test.Controllers
             // Act
             var result = await _sut.CreateUser(user);
 
-            var okResult = result as OkObjectResult;
+            var okResult = result as CreatedAtActionResult;
             var resultValue = (Result)okResult.Value;
 
             // Assert

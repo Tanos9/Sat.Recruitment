@@ -10,6 +10,8 @@ using Sat.Recruitment.Api.Repositories.Helpers;
 using Sat.Recruitment.Api.Services;
 using Sat.Recruitment.Api.Services.Interfaces;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace Sat.Recruitment.Api
 {
@@ -34,15 +36,17 @@ namespace Sat.Recruitment.Api
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Weather Forecast - Swagger",
-                    Description = "Swagger UI for Weather Forecast",
+                    Title = "Recruitment Project - Swagger",
+                    Description = "Swagger UI for Recruitment Project",
                 });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserJsonRepository, UserJsonRepository>();
             services.AddScoped<IFileManagerJson, FileManagerJson>();
             services.AddLogging();
-
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
@@ -60,7 +64,7 @@ namespace Sat.Recruitment.Api
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Weather V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Recruitment Project V1");
             });
             app.UseRouting();
 

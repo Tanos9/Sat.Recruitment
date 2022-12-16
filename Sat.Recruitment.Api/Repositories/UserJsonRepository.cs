@@ -44,12 +44,10 @@ namespace Sat.Recruitment.Api.DataAccess
         {
             var users = await GetAll();
             
-            var userExists = users.Any(u =>
+            return users.Any(u =>
                 u.Email.Equals(user.Email) ||
                 u.Phone.Equals(user.Phone) ||
                 (u.Name.Equals(user.Name) && u.Address.Equals(user.Address)));
-
-            return userExists;
         }
 
         private async Task<List<User>> ReadUsersFromFile()

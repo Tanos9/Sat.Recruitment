@@ -18,6 +18,7 @@ namespace Sat.Recruitment.Api.Models.User
         [Required]
         public string Phone { get; set; }
 
+        /// <summary>User Types available: Normal/SuperUser/Premium</summary>
         [Required]
         [UserTypeValidator]
         public string UserType { get; set; }

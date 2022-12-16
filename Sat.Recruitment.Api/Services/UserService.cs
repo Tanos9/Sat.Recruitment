@@ -56,7 +56,6 @@ namespace Sat.Recruitment.Api.Services
             return await _repository.GetAll();
         }
 
-
         public void AddMoneyGiftByUserType(User user)
         {
             var percentage = GetPercentageByUserType(user);
@@ -94,12 +93,9 @@ namespace Sat.Recruitment.Api.Services
                 return 0;
             }
 
-            if (Equals(user.UserType, UserType.Premium))
+            if (Equals(user.UserType, UserType.Premium) && user.Money > 100)
             {
-                if (user.Money > 100)
-                {
-                    return 2;
-                }
+                return 2;
             }
 
             return 0;
@@ -112,8 +108,7 @@ namespace Sat.Recruitment.Api.Services
 
         private bool Equals(string stringValue, UserType enumValue)
         {
-            var result = stringValue.ToLower().Equals(enumValue.ToString().ToLower());
-            return result;
+            return stringValue.Equals(enumValue.ToString(), System.StringComparison.OrdinalIgnoreCase);
         }
     }
 }
