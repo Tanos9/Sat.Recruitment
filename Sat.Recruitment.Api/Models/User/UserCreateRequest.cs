@@ -13,9 +13,6 @@ namespace Sat.Recruitment.Api.Models.User
         public string Email { get; set; }
 
         [Required]
-        public string LastName { get; set; }
-
-        [Required]
         public string Address { get; set; }
 
         [Required]

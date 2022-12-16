@@ -5,12 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Files\Users_Refactor.json" />
+    <Content Remove="Files\Users.json" />
+    <Content Remove="Files\Users_Test.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Files\Users_Refactor.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="Files\Users.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Files\Users_Test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
@@ -20,12 +24,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Files\Users.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

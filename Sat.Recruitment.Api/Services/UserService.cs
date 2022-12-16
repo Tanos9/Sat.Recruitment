@@ -59,7 +59,7 @@ namespace Sat.Recruitment.Api.Services
 
         public void AddMoneyGiftByUserType(User user)
         {
-            decimal percentage = GetPercentageByUserType(user);
+            var percentage = GetPercentageByUserType(user);
 
             if (percentage > 0)
             {

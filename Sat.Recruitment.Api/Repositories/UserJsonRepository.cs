@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Sat.Recruitment.Api.DataAccess.Interfaces;
 using Sat.Recruitment.Api.Models.User;
+using Sat.Recruitment.Api.Repositories.Helpers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,13 @@ namespace Sat.Recruitment.Api.DataAccess
 {
     public class UserJsonRepository : IUserJsonRepository
     {
+        private readonly IFileManagerJson _fileManager;
+
+        public UserJsonRepository(IFileManagerJson fileManager)
+        {
+            _fileManager = fileManager;
+        }
+
         public async Task<IEnumerable<User>> GetAll()
         {
             return await ReadUsersFromFile();
@@ -17,7 +25,7 @@ namespace Sat.Recruitment.Api.DataAccess
 
         public async Task Insert(User user)
         {
-            var fileStream = ReadJsonFile();
+            var fileStream = await _fileManager.ReadJsonFile();
 
             using StreamReader reader = new StreamReader(fileStream);
 
@@ -44,11 +52,11 @@ namespace Sat.Recruitment.Api.DataAccess
             return userExists;
         }
 
-        private Task<List<User>> ReadUsersFromFile()
+        private async Task<List<User>> ReadUsersFromFile()
         {
             List<User> users;
 
-            using (var fileStream = ReadJsonFile())
+            using (var fileStream = await _fileManager.ReadJsonFile())
             {
                 using StreamReader reader = new StreamReader(fileStream);
 
@@ -59,22 +67,12 @@ namespace Sat.Recruitment.Api.DataAccess
                 users = JsonConvert.DeserializeObject<List<User>>(jsonFile);
             }
 
-            return Task.FromResult(users);
+            return await Task.FromResult(users);
         }
 
-        private FileStream ReadJsonFile()
+        private async Task<bool> WriteUsersToJsonFile(IList<User> users)
         {
-            var path = Directory.GetCurrentDirectory() + "./Files/Users_Refactor.json"; //TODO: Add to settings
-
-            return  new FileStream(path, FileMode.Open);
-        }
-
-        private Task<bool> WriteUsersToJsonFile(IList<User> users)
-        {
-            string json = JsonConvert.SerializeObject(users);
-            File.WriteAllText("./Files/Users_Refactor.json", json);
-
-            return Task.FromResult(true);
+            return await _fileManager.WriteJsonFile(users);
         }
     }
 }

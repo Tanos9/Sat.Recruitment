@@ -4,13 +4,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Sat.Recruitment.Api.Services.Interfaces;
-using Sat.Recruitment.Api.Services;
-using System;
-using Sat.Recruitment.Api.DataAccess.Interfaces;
-using Sat.Recruitment.Api.Models.User;
 using Sat.Recruitment.Api.DataAccess;
-using Microsoft.Extensions.Logging;
+using Sat.Recruitment.Api.DataAccess.Interfaces;
+using Sat.Recruitment.Api.Repositories.Helpers;
+using Sat.Recruitment.Api.Services;
+using Sat.Recruitment.Api.Services.Interfaces;
+using System;
 
 namespace Sat.Recruitment.Api
 {
@@ -29,6 +28,7 @@ namespace Sat.Recruitment.Api
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSingleton(Configuration);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -40,6 +40,7 @@ namespace Sat.Recruitment.Api
             });
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserJsonRepository, UserJsonRepository>();
+            services.AddScoped<IFileManagerJson, FileManagerJson>();
             services.AddLogging();
 
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
