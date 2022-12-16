@@ -17,7 +17,7 @@ namespace Sat.Recruitment.Test
         {
             var userController = new UsersController();
 
-            var result = userController.CreateUser("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", "Normal", "124").Result;
+            var result = userController.CreateUser("Mike", "mike@gmail.com", "Av. Juan G", "+349 1122354215", "Premium", "700").Result;
 
 
             Assert.Equal(true, result.IsSuccess);

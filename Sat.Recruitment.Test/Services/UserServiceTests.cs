@@ -31,7 +31,24 @@ namespace Sat.Recruitment.Test.Services
         public void CreateUser_ExecutesSuccessfully(string name, string address, string email, decimal money, string phone, string userType)
         {
             // Arrange
+            var expectedResult = new Result()
+            {
+                IsSuccess = true,
+                Errors = "The user has been created."
+            };
+
             var users = GetUsers();
+
+            var user = new User()
+            {
+                Name = name,
+                Address = address,
+                Email = email,
+                Money = money,
+                Phone = phone,
+                UserType = userType
+            };
+
             var userCreateRequest = new UserCreateRequest
             {
                 Name = name,
@@ -42,13 +59,19 @@ namespace Sat.Recruitment.Test.Services
                 UserType = userType
             };
 
-            _repository.Setup(m => m.GetAll()).Returns(Task.FromResult(users));
+            _repository.Setup(m => m.GetAll()).ReturnsAsync(users);
+
+            _mapper.Setup(x => x.Map<User>(It.IsAny<UserCreateRequest>()))
+                .Returns(user);
 
             // Act
             var result = _sut.CreateUser(userCreateRequest).Result;
 
             // Assert
-            result.Should();
+            _repository.Verify(m => m.Insert(It.IsAny<User>()), Times.Once);
+            result.Should().BeOfType<Result>();
+            result.IsSuccess.Should().Be(expectedResult.IsSuccess);
+            result.Errors.Should().Be(expectedResult.Errors);
         }
         
         [Theory]
@@ -84,16 +107,32 @@ namespace Sat.Recruitment.Test.Services
         }
 
         [Theory]
-        [InlineData("goodnight moon", "moon", true)]
-        [InlineData("hello world", "hi", false)]
-        public void Contains(string input, string sub, bool expected)
+        [InlineData("Jens Johansson", 500, "Normal", 560)]
+        [InlineData("Jordan Rudess", 80, "Normal", 144)]
+        [InlineData("Janne Wirman", 5, "Normal", 5)]
+        [InlineData("Alexi Laiho", 110, "SuperUser", 132)]
+        [InlineData("Julia Belcasino", 80, "SuperUser", 80)]
+        [InlineData("Sandra Amazon", 99, "Premium", 99)]
+        [InlineData("John Petrucci", 700, "Premium", 2100)]
+        public void AddMoneyGiftByUserType_ObtainsExpectedResult(string name, decimal money, string userType, decimal expectedResult)
         {
-            var actual = input.Contains(sub);
-            Assert.Equal(expected, actual);
+            // Arrange
+            var user = new User()
+            {
+                Name = name,
+                Money = money,
+                UserType = userType
+            };
+
+            // Act
+            _sut.AddMoneyGiftByUserType(user);
+
+            // Assert
+            user.Money.Should().Be(expectedResult);
         }
 
         [Fact]
-        public void GetAllUsers_Successful()
+        public void GetAllUsers_ExecutesSuccesfully()
         {
             // Arrange
             var users = GetUsers();

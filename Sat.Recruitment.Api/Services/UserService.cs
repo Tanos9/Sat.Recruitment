@@ -5,9 +5,7 @@ using Sat.Recruitment.Api.Models;
 using Sat.Recruitment.Api.Models.Enums;
 using Sat.Recruitment.Api.Models.User;
 using Sat.Recruitment.Api.Services.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sat.Recruitment.Api.Services
@@ -49,7 +47,7 @@ namespace Sat.Recruitment.Api.Services
             return new Result()
             {
                 IsSuccess = true,
-                Errors = "The user has been created"
+                Errors = "The user has been created."
             };
         }
 
@@ -90,13 +88,13 @@ namespace Sat.Recruitment.Api.Services
             {
                 if (user.Money > 100)
                 {
-                    return (decimal)0.20;
+                    return (decimal)0.2;
                 }
 
                 return 0;
             }
 
-            if (Equals(user.UserType, UserType.Normal))
+            if (Equals(user.UserType, UserType.Premium))
             {
                 if (user.Money > 100)
                 {
