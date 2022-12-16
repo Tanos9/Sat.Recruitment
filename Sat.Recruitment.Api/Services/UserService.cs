@@ -15,13 +15,13 @@ namespace Sat.Recruitment.Api.Services
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
-        private readonly IUserJsonRepository _userJsonRepository;
+        private readonly IUserJsonRepository _repository;
         private readonly ILogger<UserService> _logger;
 
         public UserService(IMapper mapper, IUserJsonRepository repository, ILogger<UserService> logger)
         {
             _mapper = mapper;
-            _userJsonRepository = repository;
+            _repository = repository;
             _logger = logger;
         }
 
@@ -29,7 +29,7 @@ namespace Sat.Recruitment.Api.Services
         {
             var user = _mapper.Map<User>(userCreateRequest);
 
-            var userExists = await _userJsonRepository.UserExists(user);
+            var userExists = await _repository.UserExists(user);
 
             if (userExists)
             {
@@ -42,7 +42,7 @@ namespace Sat.Recruitment.Api.Services
 
             AddMoneyGiftByUserType(user);
 
-            await _userJsonRepository.Insert(user);
+            await _repository.Insert(user);
 
             _logger.LogInformation($"User Created: {user.Name}" + " - " + $"{user.Address}");
 
@@ -55,7 +55,7 @@ namespace Sat.Recruitment.Api.Services
 
         public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return await _userJsonRepository.GetAll();
+            return await _repository.GetAll();
         }
 
 

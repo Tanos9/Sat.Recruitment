@@ -19,7 +19,7 @@ namespace Sat.Recruitment.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/user")]
+        [Route("/users")]
         public async Task<IActionResult> CreateUser(UserCreateRequest userCreateRequest)
         {
             var result = await _userService.CreateUser(userCreateRequest);
@@ -27,7 +27,7 @@ namespace Sat.Recruitment.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/user")]
+        [Route("/users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var result = await _userService.GetAllUsers();
