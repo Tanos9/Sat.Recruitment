@@ -1,38 +1,81 @@
-﻿using Sat.Recruitment.Api.Models.User;
+﻿using Newtonsoft.Json;
+using Sat.Recruitment.Api.DataAccess.Interfaces;
+using Sat.Recruitment.Api.Models.User;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sat.Recruitment.Api.DataAccess
 {
-    public class UserJsonRepository : IGenericRepository<User>
+    public class UserJsonRepository : IUserJsonRepository
     {
-        public void Delete(object id)
+        public async Task<IEnumerable<User>> GetAll()
         {
-            throw new System.NotImplementedException();
+            return await ReadUsersFromFile();
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task Insert(User user)
         {
-            throw new System.NotImplementedException();
+            var fileStream = ReadJsonFile();
+
+            using StreamReader reader = new StreamReader(fileStream);
+
+            var jsonFile = reader.ReadToEnd();
+
+            fileStream.Close();
+
+            var users = JsonConvert.DeserializeObject<List<User>>(jsonFile);
+
+            users.Add(user);
+
+            await WriteUsersToJsonFile(users);
         }
 
-        public User GetById(object id)
+        public async Task<bool> UserExists(User user)
         {
-            throw new System.NotImplementedException();
+            var users = await GetAll();
+            
+            var userExists = users.Any(u =>
+                u.Email.Equals(user.Email) ||
+                u.Phone.Equals(user.Phone) ||
+                (u.Name.Equals(user.Name) && u.Address.Equals(user.Address)));
+
+            return userExists;
         }
 
-        public void Insert(User obj)
+        private Task<List<User>> ReadUsersFromFile()
         {
-            throw new System.NotImplementedException();
+            List<User> users;
+
+            using (var fileStream = ReadJsonFile())
+            {
+                using StreamReader reader = new StreamReader(fileStream);
+
+                var jsonFile = reader.ReadToEnd();
+
+                fileStream.Close();
+
+                users = JsonConvert.DeserializeObject<List<User>>(jsonFile);
+            }
+
+            return Task.FromResult(users);
         }
 
-        public void Save()
+        private FileStream ReadJsonFile()
         {
-            throw new System.NotImplementedException();
+            var path = Directory.GetCurrentDirectory() + "./Files/Users_Refactor.json"; //TODO: Add to settings
+
+            return  new FileStream(path, FileMode.Open);
         }
 
-        public void Update(User obj)
+        private Task<bool> WriteUsersToJsonFile(IList<User> users)
         {
-            throw new System.NotImplementedException();
+            string json = JsonConvert.SerializeObject(users);
+            File.WriteAllText("./Files/Users_Refactor.json", json);
+
+            return Task.FromResult(true);
         }
     }
 }
+

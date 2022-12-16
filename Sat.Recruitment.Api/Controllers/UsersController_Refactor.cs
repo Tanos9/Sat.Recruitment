@@ -2,6 +2,7 @@
 using Sat.Recruitment.Api.Models;
 using Sat.Recruitment.Api.Models.User;
 using Sat.Recruitment.Api.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace Sat.Recruitment.Api.Controllers
 {
@@ -18,11 +19,19 @@ namespace Sat.Recruitment.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/user/create")]
-        public IActionResult CreateUser(UserCreateRequest userCreateRequest)
+        [Route("/user")]
+        public async Task<IActionResult> CreateUser(UserCreateRequest userCreateRequest)
         {
-            _userService.CreateUser(userCreateRequest);
-            return Ok(new Result() { IsSuccess = true });
+            var result = await _userService.CreateUser(userCreateRequest);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("/user")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var result = await _userService.GetAllUsers();
+            return Ok(result);
         }
     }
 }

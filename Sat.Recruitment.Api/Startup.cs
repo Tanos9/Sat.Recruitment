@@ -7,6 +7,10 @@ using Microsoft.OpenApi.Models;
 using Sat.Recruitment.Api.Services.Interfaces;
 using Sat.Recruitment.Api.Services;
 using System;
+using Sat.Recruitment.Api.DataAccess.Interfaces;
+using Sat.Recruitment.Api.Models.User;
+using Sat.Recruitment.Api.DataAccess;
+using Microsoft.Extensions.Logging;
 
 namespace Sat.Recruitment.Api
 {
@@ -35,6 +39,11 @@ namespace Sat.Recruitment.Api
                 });
             });
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserJsonRepository, UserJsonRepository>();
+            services.AddLogging();
+
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
